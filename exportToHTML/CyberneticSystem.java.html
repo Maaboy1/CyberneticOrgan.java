@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>CyberneticSystem.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #cf8e6d;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+CyberneticSystem.java</font>
+</center></td></tr></table>
+<pre>
+<span class="s1">package </span><span class="s0">CyberneticSystem</span><span class="s2">.</span><span class="s0">java</span><span class="s2">.</span><span class="s0">src</span><span class="s2">;</span>
+
+<span class="s1">import </span><span class="s0">java</span><span class="s2">.</span><span class="s0">util</span><span class="s2">.</span><span class="s0">Random</span><span class="s2">;</span>
+
+<span class="s1">public class </span><span class="s0">CyberneticSystem </span><span class="s2">{</span>
+    <span class="s1">private </span><span class="s0">Heart heart</span><span class="s2">;</span>
+    <span class="s1">private </span><span class="s0">Lung lung</span><span class="s2">;</span>
+    <span class="s1">private </span><span class="s0">Brain brain</span><span class="s2">;</span>
+    <span class="s1">private int </span><span class="s0">time</span><span class="s2">;</span>
+    <span class="s1">private </span><span class="s0">Random random</span><span class="s2">;</span>
+
+    <span class="s1">public </span><span class="s0">CyberneticSystem</span><span class="s2">() {</span>
+        <span class="s0">heart </span><span class="s2">= </span><span class="s1">new </span><span class="s0">Heart</span><span class="s2">();</span>
+        <span class="s0">lung </span><span class="s2">= </span><span class="s1">new </span><span class="s0">Lung</span><span class="s2">();</span>
+        <span class="s0">brain </span><span class="s2">= </span><span class="s1">new </span><span class="s0">Brain</span><span class="s2">();</span>
+        <span class="s0">time </span><span class="s2">= </span><span class="s3">100</span><span class="s2">;</span>
+        <span class="s0">random </span><span class="s2">= </span><span class="s1">new </span><span class="s0">Random</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s1">public void </span><span class="s0">runSimulation</span><span class="s2">(</span><span class="s1">int </span><span class="s0">step</span><span class="s2">) {</span>
+        <span class="s1">if </span><span class="s2">(</span><span class="s0">step </span><span class="s2">== </span><span class="s3">0 </span><span class="s2">|| </span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt;= </span><span class="s3">0 </span><span class="s2">|| </span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt;= </span><span class="s3">0 </span><span class="s2">|| </span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt;= </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s0">printFinalSummary</span><span class="s2">(</span><span class="s0">step</span><span class="s2">);</span>
+            <span class="s1">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">heart</span><span class="s2">.</span><span class="s0">updatePumpRate</span><span class="s2">(</span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getControlEfficiency</span><span class="s2">());</span>
+        <span class="s0">heart</span><span class="s2">.</span><span class="s0">updateHealth</span><span class="s2">(</span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getOxygenLevel</span><span class="s2">());</span>
+
+        <span class="s0">lung</span><span class="s2">.</span><span class="s0">updateOxygenLevel</span><span class="s2">(</span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getPumpRate</span><span class="s2">());</span>
+        <span class="s0">lung</span><span class="s2">.</span><span class="s0">updateHealth</span><span class="s2">(</span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getPumpRate</span><span class="s2">());</span>
+
+        <span class="s0">brain</span><span class="s2">.</span><span class="s0">updateControlEfficiency</span><span class="s2">(</span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getOxygenLevel</span><span class="s2">());</span>
+        <span class="s0">brain</span><span class="s2">.</span><span class="s0">updateHealth</span><span class="s2">(</span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getOxygenLevel</span><span class="s2">());</span>
+
+        <span class="s0">printStatus</span><span class="s2">(</span><span class="s0">step</span><span class="s2">);</span>
+
+        <span class="s1">if </span><span class="s2">(</span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextDouble</span><span class="s2">() &lt; </span><span class="s3">0.10</span><span class="s2">) {</span>
+            <span class="s0">triggerRandomEvent</span><span class="s2">(</span><span class="s0">step</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">checkHealthAlerts</span><span class="s2">(</span><span class="s0">step</span><span class="s2">);</span>
+
+        <span class="s0">runSimulation</span><span class="s2">(</span><span class="s0">step </span><span class="s2">- </span><span class="s3">1</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private void </span><span class="s0">printStatus</span><span class="s2">(</span><span class="s1">int </span><span class="s0">step</span><span class="s2">) {</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Time: &quot; </span><span class="s2">+ </span><span class="s0">step</span><span class="s2">);</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Heart Health: &quot; </span><span class="s2">+ </span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() + </span><span class="s4">&quot; | Pump Rate: &quot; </span><span class="s2">+ </span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getPumpRate</span><span class="s2">());</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Lung Health: &quot; </span><span class="s2">+ </span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() + </span><span class="s4">&quot; | Oxygen Level: &quot; </span><span class="s2">+ </span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getOxygenLevel</span><span class="s2">());</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Brain Health: &quot; </span><span class="s2">+ </span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() + </span><span class="s4">&quot; | Control Efficiency: &quot; </span><span class="s2">+ </span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getControlEfficiency</span><span class="s2">());</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private void </span><span class="s0">triggerRandomEvent</span><span class="s2">(</span><span class="s1">int </span><span class="s0">step</span><span class="s2">) {</span>
+        <span class="s1">int </span><span class="s0">organ </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextInt</span><span class="s2">(</span><span class="s3">3</span><span class="s2">); </span><span class="s5">// 0 = Heart, 1 = Lung, 2 = Brain</span>
+        <span class="s1">int </span><span class="s0">healthChange </span><span class="s2">= </span><span class="s0">random</span><span class="s2">.</span><span class="s0">nextInt</span><span class="s2">(</span><span class="s3">21</span><span class="s2">) - </span><span class="s3">10</span><span class="s2">; </span><span class="s5">// Random health change between -10 and 10</span>
+
+        <span class="s1">switch </span><span class="s2">(</span><span class="s0">organ</span><span class="s2">) {</span>
+            <span class="s1">case </span><span class="s3">0</span><span class="s2">:</span>
+                <span class="s0">heart</span><span class="s2">.</span><span class="s0">changeHealth</span><span class="s2">(</span><span class="s0">healthChange</span><span class="s2">);</span>
+                <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;EVENT at Time &quot; </span><span class="s2">+ </span><span class="s0">step </span><span class="s2">+ </span><span class="s4">&quot;: Random health change for Heart by &quot; </span><span class="s2">+ </span><span class="s0">healthChange </span><span class="s2">+ </span><span class="s4">&quot; points&quot;</span><span class="s2">);</span>
+                <span class="s1">break</span><span class="s2">;</span>
+            <span class="s1">case </span><span class="s3">1</span><span class="s2">:</span>
+                <span class="s0">lung</span><span class="s2">.</span><span class="s0">changeHealth</span><span class="s2">(</span><span class="s0">healthChange</span><span class="s2">);</span>
+                <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;EVENT at Time &quot; </span><span class="s2">+ </span><span class="s0">step </span><span class="s2">+ </span><span class="s4">&quot;: Random health change for Lung by &quot; </span><span class="s2">+ </span><span class="s0">healthChange </span><span class="s2">+ </span><span class="s4">&quot; points&quot;</span><span class="s2">);</span>
+                <span class="s1">break</span><span class="s2">;</span>
+            <span class="s1">case </span><span class="s3">2</span><span class="s2">:</span>
+                <span class="s0">brain</span><span class="s2">.</span><span class="s0">changeHealth</span><span class="s2">(</span><span class="s0">healthChange</span><span class="s2">);</span>
+                <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;EVENT at Time &quot; </span><span class="s2">+ </span><span class="s0">step </span><span class="s2">+ </span><span class="s4">&quot;: Random health change for Brain by &quot; </span><span class="s2">+ </span><span class="s0">healthChange </span><span class="s2">+ </span><span class="s4">&quot; points&quot;</span><span class="s2">);</span>
+                <span class="s1">break</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private void </span><span class="s0">checkHealthAlerts</span><span class="s2">(</span><span class="s1">int </span><span class="s0">step</span><span class="s2">) {</span>
+        <span class="s1">if </span><span class="s2">(</span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt; </span><span class="s3">25</span><span class="s2">) {</span>
+            <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;ALERT at Time &quot; </span><span class="s2">+ </span><span class="s0">step </span><span class="s2">+ </span><span class="s4">&quot;: Heart Critical! Health at &quot; </span><span class="s2">+ </span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() + </span><span class="s4">&quot;%&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s1">if </span><span class="s2">(</span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt; </span><span class="s3">25</span><span class="s2">) {</span>
+            <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;ALERT at Time &quot; </span><span class="s2">+ </span><span class="s0">step </span><span class="s2">+ </span><span class="s4">&quot;: Lung Critical! Health at &quot; </span><span class="s2">+ </span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() + </span><span class="s4">&quot;%&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s1">if </span><span class="s2">(</span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt; </span><span class="s3">25</span><span class="s2">) {</span>
+            <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;ALERT at Time &quot; </span><span class="s2">+ </span><span class="s0">step </span><span class="s2">+ </span><span class="s4">&quot;: Brain Critical! Health at &quot; </span><span class="s2">+ </span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() + </span><span class="s4">&quot;%&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private void </span><span class="s0">printFinalSummary</span><span class="s2">(</span><span class="s1">int </span><span class="s0">step</span><span class="s2">) {</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Simulation Ended:&quot;</span><span class="s2">);</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Time: &quot; </span><span class="s2">+ </span><span class="s0">step</span><span class="s2">);</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Heart Health: &quot; </span><span class="s2">+ </span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">());</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Lung Health: &quot; </span><span class="s2">+ </span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">());</span>
+        <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Brain Health: &quot; </span><span class="s2">+ </span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">());</span>
+
+        <span class="s1">if </span><span class="s2">(</span><span class="s0">heart</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt;= </span><span class="s3">0 </span><span class="s2">|| </span><span class="s0">lung</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt;= </span><span class="s3">0 </span><span class="s2">|| </span><span class="s0">brain</span><span class="s2">.</span><span class="s0">getHealth</span><span class="s2">() &lt;= </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Simulation Result: Failure&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s1">else </span><span class="s2">{</span>
+            <span class="s0">System</span><span class="s2">.</span><span class="s0">out</span><span class="s2">.</span><span class="s0">println</span><span class="s2">(</span><span class="s4">&quot;Simulation Result: Success&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">public static void </span><span class="s0">main</span><span class="s2">(</span><span class="s0">String</span><span class="s2">[] </span><span class="s0">args</span><span class="s2">) {</span>
+        <span class="s0">CyberneticSystem simulation </span><span class="s2">= </span><span class="s1">new </span><span class="s0">CyberneticSystem</span><span class="s2">();</span>
+        <span class="s0">simulation</span><span class="s2">.</span><span class="s0">runSimulation</span><span class="s2">(</span><span class="s3">100</span><span class="s2">); </span><span class="s5">// Start the simulation with 100 time steps</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
